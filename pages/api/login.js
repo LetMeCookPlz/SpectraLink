@@ -15,7 +15,7 @@ try {
   const user = users[0];
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    return res.status(401).json({ message: 'Invalid email or password' });
+    return res.status(401).json({ message: 'Неправильний email або пароль' });
   }
 	const sessionID = `sess:${crypto.randomUUID()}`; 
   await redis.hSet(sessionID, {

@@ -3,7 +3,7 @@
 import pool from '@/lib/db';
 import { verifySession } from '@/lib/redis';
 import { cookies } from 'next/headers';
-import Connections from "@/app/components/ui/connections"
+import Connections from "@/app/components/connections"
 
 export default async function Component() {
   const session_id = cookies().get('session_id');

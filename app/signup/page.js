@@ -52,28 +52,28 @@ export default function SignupComponent() {
       <Card className="w-full max-w-sm">
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle className="text-2xl">Sign up</CardTitle>
+            <CardTitle className="text-2xl">Реєстрація</CardTitle>
             <CardDescription>
-              Enter your information to create a new account.
+              Введіть ваші дані щоб створити новий акаунт.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>Помилка</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
             {success && (
               <Alert>
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Success</AlertTitle>
-                <AlertDescription>Your account has been created successfully!</AlertDescription>
+                <AlertTitle>Акаунт створений</AlertTitle>
+                <AlertDescription>Ваш акаунт був успішно створений, тепер ви можете авторизуватися.</AlertDescription>
               </Alert>
             )}
             <div className="grid gap-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">Email</Label>
               <Input 
                 id="email" 
                 type="email" 
@@ -84,7 +84,7 @@ export default function SignupComponent() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="PIB">PIB</Label>
+              <Label htmlFor="PIB">ПІБ</Label>
               <Input 
                 id="PIB" 
                 type="text" 
@@ -94,7 +94,7 @@ export default function SignupComponent() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Пароль</Label>
               <Input 
                 id="password" 
                 type="password" 
@@ -105,7 +105,7 @@ export default function SignupComponent() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" type="submit">Sign up</Button>
+            <Button className="w-full" type="submit">Зареєструватися</Button>
           </CardFooter>
         </form>
       </Card>

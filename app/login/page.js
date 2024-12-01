@@ -54,14 +54,14 @@ export default function LoginComponent() {
           <CardHeader>
             <CardTitle className="text-2xl">Login</CardTitle>
             <CardDescription>
-              Enter your email and password to log in to your account.
+              Введіть ваш email та пароль щоб увійти в акаунт.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             {error && (
               <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertTitle>Error</AlertTitle>
+                <AlertTitle>Помилка</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -77,7 +77,7 @@ export default function LoginComponent() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Пароль</Label>
               <Input 
                 id="password" 
                 type="password" 
@@ -88,7 +88,7 @@ export default function LoginComponent() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" type="submit">Sign in</Button>
+            <Button className="w-full" type="submit">Увійти</Button>
           </CardFooter>
         </form>
       </Card>

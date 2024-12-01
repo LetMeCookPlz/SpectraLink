@@ -92,47 +92,47 @@ export function UserMenu({ email }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem asChild>
-          <Link href="/dashboard" className="w-full">Dashboard</Link>
+          <Link href="/dashboard" className="w-full">Особистий кабінет</Link>
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => setIsDialogOpen(true)}>
-          Account Settings
+          Налаштування
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(event) => {
           event.preventDefault()
           setIsAlertDialogOpen(true)
         }}>
-          Log Out
+          Вихід
         </DropdownMenuItem>
       </DropdownMenuContent>
 
       <AlertDialog open={isAlertDialogOpen} onOpenChange={setIsAlertDialogOpen}>
         <AlertDialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }} className="shadow-lg">
           <AlertDialogHeader>
-            <AlertDialogTitle>Log Out</AlertDialogTitle>
+            <AlertDialogTitle>Вихід</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure that you want to log out?
+              Ви впевнені, що хочете вийти з аканту?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setIsAlertDialogOpen(false)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleLogout}>Continue</AlertDialogAction>
+            <AlertDialogCancel onClick={() => setIsAlertDialogOpen(false)}>Відмінити</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLogout}>Підтвердити</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 			<DialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }} className="shadow-lg">
         <DialogHeader>
-          <DialogTitle>Account Settings</DialogTitle>
+          <DialogTitle>Налаштування акаунту</DialogTitle>
           <DialogDescription>
-            Make changes to your account here. Click save when you're done.
+            Тут ви можете змінювати свої особисті дані. Натисність "Зберігти зміни", коли будете готові.
           </DialogDescription>
         </DialogHeader>
 				<form onSubmit={handleSubmit}>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="newEmail" className="text-right">
-              New Email
+              Новий Email
             </Label>
             <Input
               id="newEmail"
@@ -143,7 +143,7 @@ export function UserMenu({ email }) {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="newPassword" className="text-right">
-              New Password
+              Новий пароль
             </Label>
             <Input
 							type="password"
@@ -154,7 +154,7 @@ export function UserMenu({ email }) {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit">Зберігти зміни</Button>
         </DialogFooter>
 				</form>
       </DialogContent>

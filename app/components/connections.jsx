@@ -12,7 +12,7 @@ import {
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Slider } from "@/components/ui/slider";
-import BalanceCard from "@/components/ui/balance-card";
+import BalanceCard from "@/app/components/balance-card";
 
 export default function Connections({ connections, plans, userBalance }) {
   const [localConnections, setLocalConnections] = useState(connections);
@@ -102,7 +102,7 @@ export default function Connections({ connections, plans, userBalance }) {
     <div className='pt-16'>
       <Card className="w-full max-w-md mx-auto bg-transparent border-transparent mt-4">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Your Balance</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center">Ваш баланс</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-4xl font-bold text-center" aria-live="polite">
@@ -110,7 +110,7 @@ export default function Connections({ connections, plans, userBalance }) {
           </div>
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-muted-foreground">
-              <span>Add Funds</span>
+              <span>Додати фінанси</span>
               <span>${amount.toFixed(2)}</span>
             </div>
             <Slider
@@ -128,7 +128,7 @@ export default function Connections({ connections, plans, userBalance }) {
             onClick={handleAddBalance}
             disabled={amount <= 0}
           >
-            Add ${amount.toFixed(2)} to Balance
+            Поповнити баланс на ${amount.toFixed(2)}
           </Button>
         </CardFooter>
       </Card>
@@ -144,7 +144,7 @@ export default function Connections({ connections, plans, userBalance }) {
               </CardHeader>
               <CardContent className="grid gap-4">
 							<p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
-                  Connection Type: {connection.connection_type}
+                  Тип підключення: {connection.connection_type}
                 </p>
                 <Select
                   value={connection.plan_id.toString()}
@@ -155,7 +155,7 @@ export default function Connections({ connections, plans, userBalance }) {
                   }}
                 >
                   <SelectTrigger className="outline outline-1 outline-secondary rounded-full text-lg text-center flex items-center justify-center h-[2.5rem]">
-                    Traffic Plan: {plan.name}
+                    Тарифний план: {plan.name}
                   </SelectTrigger>
                   <SelectContent>
                     {plans.map((plan) => (
@@ -166,7 +166,7 @@ export default function Connections({ connections, plans, userBalance }) {
                   </SelectContent>
                 </Select>
                 <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
-                  Status: {connection.status === 1 ? 'Active' : 'Inactive'}
+                  Статус: {connection.status === 1 ? 'Активований' : 'Не активаний'}
                 </p>
               </CardContent>
               <CardFooter>
@@ -184,7 +184,7 @@ export default function Connections({ connections, plans, userBalance }) {
                   }
                 >
                   {connection.status === 1
-                    ? 'Activated'
+                    ? 'Активований'
                     : `Activate ($${activationPrice.toFixed(2)})`}
                 </Button>
               </CardFooter>
@@ -196,15 +196,15 @@ export default function Connections({ connections, plans, userBalance }) {
         <AlertDialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Confirm Plan Change
+              Зміна тарифного плану
             </AlertDialogTitle>
           </AlertDialogHeader>
-          <p>Are you sure you want to change to the selected plan?</p>
+          <p>Чи точно ви хочете змінити тарифний план? Ви будете повинні оплатити послугу по її новій ціні.</p>
           <AlertDialogFooter>
             <Button onClick={() => setDialogOpen(false)} variant="secondary">
-              Cancel
+              Відмінити
             </Button>
-            <Button onClick={handleChangePlan}>Confirm</Button>
+            <Button onClick={handleChangePlan}>Підтвердити</Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

@@ -42,9 +42,9 @@ export default function Details({ plan }) {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }} >
           <DialogHeader>
-            <DialogTitle>Connection Details</DialogTitle>
+            <DialogTitle>Деталі нового підключення</DialogTitle>
             <DialogDescription>
-              Enter the details below to submit a connection request.
+              Для оформлення заявки на підключення, надайте нам необхідну інформацію.
             </DialogDescription>
           </DialogHeader>
 
@@ -52,7 +52,7 @@ export default function Details({ plan }) {
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="planSelect" className="text-right">
-                  Selected Plan
+                  Обраний план
                 </Label>
                 <Input
                   id="planSelect"
@@ -63,7 +63,7 @@ export default function Details({ plan }) {
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="address" className="text-right">
-                  Address
+                  Адреса
                 </Label>
                 <Input
                   id="address"
@@ -74,9 +74,9 @@ export default function Details({ plan }) {
                 />
               </div>
 
-              <div className="grid grid-cols-4 items-center gap-3">
+              <div className="grid grid-cols-4 items-center gap-2">
                 <Label htmlFor="connectionType" className="text-right">
-                  Connection Type
+                  Тип підключення
                 </Label>
                 <Select
                   value={connectionType}
@@ -86,8 +86,8 @@ export default function Details({ plan }) {
                     <SelectValue placeholder="Select a connection type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Coaxial">Coaxial</SelectItem>
-                    <SelectItem value="Fiber">Fiber</SelectItem>
+                    <SelectItem value="Коаксідальне">Коаксідальне</SelectItem>
+                    <SelectItem value="Оптоволокно">Оптоволокно</SelectItem>
                     <SelectItem value="DSL">DSL</SelectItem>
                   </SelectContent>
                 </Select>
@@ -95,7 +95,7 @@ export default function Details({ plan }) {
             </div>
 
             <DialogFooter>
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Надіслати</Button>
             </DialogFooter>
           </form>
         </DialogContent>
@@ -105,7 +105,7 @@ export default function Details({ plan }) {
         className="w-full rounded-full"
         onClick={() => setIsDialogOpen(true)} 
       >
-        Select Plan
+        Підключитися
       </Button>
     </>
   );

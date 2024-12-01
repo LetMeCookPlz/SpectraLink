@@ -24,13 +24,13 @@ export default async function Component() {
             </CardHeader>
             <CardContent className="grid gap-4">
               <p className="outline outline-1 outline-secondary rounded-full text-lg">
-                Bandwidth: {plan.bandwidth} Mb/s
+                Швидкість: {plan.bandwidth} Мб/с
               </p>
               <p className="outline outline-1 outline-secondary rounded-full text-lg">
-                Volume: {plan.volume} GB / month
+                Об'єм: {plan.volume} ГБ / місяць
               </p>
               <p className="outline outline-1 outline-secondary rounded-full text-lg">
-                Monthly price: ${plan.price}
+                Ціна: ${plan.price} / місяць
               </p>
             </CardContent>
             <CardFooter>

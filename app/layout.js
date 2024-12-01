@@ -76,14 +76,14 @@ export default async function RootLayout({ children }) {
                   <NavigationMenuItem>
                     <Link href="/" legacyBehavior passHref>
                       <NavigationMenuLink className={`${navigationMenuTriggerStyle()} text-xl`}>
-                        Home
+                        Головна
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
                     <Link href="/plans" legacyBehavior passHref>
                       <NavigationMenuLink className={`${navigationMenuTriggerStyle()} text-xl`}>
-                        Traffic Plans
+                        Тарифні плани
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
@@ -97,10 +97,10 @@ export default async function RootLayout({ children }) {
                 ) : (
                   <>
                     <Button variant="outline" className="mr-2">
-                      <Link href="/login">Log in</Link>
+                      <Link href="/login">Увійти</Link>
                     </Button>
                     <Button>
-                      <Link href="/signup">Sign up</Link>
+                      <Link href="/signup">Реєстрація</Link>
                     </Button>
                   </>
                 )}

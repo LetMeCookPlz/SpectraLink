@@ -9,7 +9,7 @@ const { email, PIB, password } = req.body;
 try {
 	const [users] = await pool.query('SELECT * FROM Users WHERE email = ?', [email]);
 	if (users.length > 0) {
-		return res.status(409).json({ message: 'A user with this email already exists' });
+		return res.status(409).json({ message: 'Користувач з таким email вже існує' });
 	}
 	const hash = await bcrypt.hash(password, 1);
 	await pool.query('INSERT INTO Users (PIB, email, password) VALUES (?, ?, ?)', [PIB, email, hash]);
