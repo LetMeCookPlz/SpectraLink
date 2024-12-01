@@ -1,0 +1,73 @@
+DB tables:
+- Users:
+    1. User ID (int)
+    2. PIB (varchar 30)
+    3. E-Mail (varchar 255)
+    4. Password Hash (varchar 64)
+    5. Balance (int)
+    6. Type (customer / employee / admin) (enum)
+
+- Traffic plans:
+    1. Plan ID (int)
+    2. Name (varchar 30)
+    3. Price / month (int)
+    4. Volume (Gigabytes / month) (int)
+    5. Bandwidth (Megabits / Second) (int)
+
+- Contracts
+    1. Contract ID (int)
+    2. Customer ID (int)
+    3. Address (varchar 60)
+    4. Selected plan ID (int)
+    5. Connection type (Coaxidal / Fiber / DSL) (enum)
+    6. Status (bool)
+
+- Transactions
+    1. Transaction ID (int)
+    2. User ID (int)
+    3. Sum (int)
+    4. Date
+
+CREATE TABLE Users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    PIB VARCHAR(30) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(64) NOT NULL,
+    balance INT UNSIGNED DEFAULT 0,
+    user_type ENUM('Customer', 'Employee', 'Admin') DEFAULT 'Customer'
+);
+
+CREATE TABLE Plans (
+    plan_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(30) NOT NULL UNIQUE,
+    price INT UNSIGNED NOT NULL,
+    volume INT UNSIGNED,
+    bandwidth SMALLINT UNSIGNED NOT NULL
+);
+
+CREATE TABLE Connections (
+    connection_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    plan_id INT NOT NULL,
+    address VARCHAR(60) NOT NULL,
+    connection_type ENUM('Coaxidal', 'Fiber', 'DSL') NOT NULL,
+    status BOOL DEFAULT 0,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (plan_id) REFERENCES Plans(plan_id)
+);
+
+CREATE TABLE Transactions (
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    sum INT NOT NULL,
+    date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
+CREATE TABLE Users (user_id INT AUTO_INCREMENT PRIMARY KEY, PIB VARCHAR(30) NOT NULL, email VARCHAR(255) NOT NULL UNIQUE, password VARCHAR(64) NOT NULL, balance INT UNSIGNED DEFAULT 0, user_type ENUM('Customer', 'Employee', 'Admin') DEFAULT 'Customer');
+
+CREATE TABLE Plans (plan_id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(30) NOT NULL UNIQUE, price INT UNSIGNED NOT NULL, volume INT UNSIGNED, bandwidth SMALLINT UNSIGNED NOT NULL);
+
+CREATE TABLE Connections (connection_id INT AUTO_INCREMENT PRIMARY KEY, user_id INT NOT NULL, plan_id INT NOT NULL, address VARCHAR(60) NOT NULL, connection_type ENUM('Coaxidal', 'Fiber', 'DSL') NOT NULL, status BOOL DEFAULT 0, FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE, FOREIGN KEY (plan_id) REFERENCES Plans(plan_id));
+
+CREATE TABLE Transactions (transaction_id INT AUTO_INCREMENT PRIMARY KEY, user_id INT, sum INT NOT NULL, date DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (user_id) REFERENCES Users(user_id));
