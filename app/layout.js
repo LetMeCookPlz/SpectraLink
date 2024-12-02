@@ -61,7 +61,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <header style={{ backgroundColor: '#0a0a0a' }} className="border-b absolute top-0 left-0 w-full">
+        <header style={{ backgroundColor: '#0a0a0a' }} className="border-b fixed top-0 left-0 w-full">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center">
@@ -70,7 +70,7 @@ export default async function RootLayout({ children }) {
                 </Link>
               </div>
 
-							<div className="absolute left-1/2 transform -translate-x-1/2">
+							<div className="fixed left-1/2 transform -translate-x-1/2">
               <NavigationMenu>
                 <NavigationMenuList className="flex space-x-8">
                   <NavigationMenuItem>
