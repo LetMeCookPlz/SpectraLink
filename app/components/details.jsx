@@ -105,7 +105,7 @@ export default function Details({ plan }) {
         className="w-full rounded-full"
         onClick={() => setIsDialogOpen(true)} 
       >
-        Підключитися
+        Підключити
       </Button>
     </>
   );

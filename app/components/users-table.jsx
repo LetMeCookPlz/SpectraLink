@@ -51,7 +51,7 @@ import {
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; 
 
-export function AdminTable({ usersData }) {
+export function UsersTable({ usersData }) {
 	const [users, setUsers] = useState(usersData);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
@@ -111,7 +111,7 @@ export function AdminTable({ usersData }) {
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
 					className="pl-3">
           ID
-          <ArrowUpDown />
+          <ArrowUpDown className="ml-2 h-4 w-4"/>
         </Button>
       ),
       cell: ({ row }) => <div className="pl-4">{row.getValue("user_id")}</div>,

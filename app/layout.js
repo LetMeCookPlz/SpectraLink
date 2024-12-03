@@ -57,6 +57,10 @@ export default async function RootLayout({ children }) {
   if (session_id) {
     sessionData = await verifySession(session_id);
   }
+	let isPrivileged = false;
+	if (sessionData && sessionData.user_type != 'Customer') {
+		isPrivileged = true;
+	}
 
   return (
     <html lang="en">
@@ -93,7 +97,7 @@ export default async function RootLayout({ children }) {
 
               <div className="flex items-center">
                 {sessionData ? (
-                  <UserMenu email={sessionData.email} />
+                  <UserMenu email={sessionData.email} isPrivileged={isPrivileged}/>
                 ) : (
                   <>
                     <Button variant="outline" className="mr-2">

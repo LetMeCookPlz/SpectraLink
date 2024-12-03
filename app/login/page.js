@@ -28,7 +28,7 @@ export default function LoginComponent() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError("") // Clear any previous errors
+    setError("") 
     try {
       const response = await fetch('/api/login', {
         method: 'POST',
@@ -36,7 +36,7 @@ export default function LoginComponent() {
         body: JSON.stringify({ email, password }),
       })
       if (response.ok) {
-        router.push('/dashboard')
+        router.push('/plans')
         window.location.reload()
       } else {
         const data = await response.json()
