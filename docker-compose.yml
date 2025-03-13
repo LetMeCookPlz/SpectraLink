@@ -1,0 +1,38 @@
+services:
+  nextjs:
+    build: .
+    container_name: nextjs-app
+    ports:
+      - "3000:3000"
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=sjOvqbtgfEC2atHCMAqMVZcpd5jAsnPziLRKn6NG
+      - MYSQL_DB=spectralink
+      - REDIS_HOST=redis
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: sjOvqbtgfEC2atHCMAqMVZcpd5jAsnPziLRKn6NG
+      MYSQL_DATABASE: spectralink
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+
+  redis:
+    image: redis:alpine
+    container_name: redis-server
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

@@ -70,8 +70,8 @@ export function UserMenu({ email, isPrivileged }) {
         method: 'POST',
       }) 
       if (response.ok) {
-        window.location.reload()
         router.push('/')
+        window.location.reload()
       } else {
         console.error('Failed to log out');
       } 
