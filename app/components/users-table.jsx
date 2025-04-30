@@ -63,7 +63,7 @@ export function UsersTable({ usersData }) {
 	const handleEditUser = async () => {
 		setEditDialogOpen(false); 
 		try {
-			const response = await fetch("/api/edit-user", {
+			const response = await fetch("/api/admin/edit-user", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -90,7 +90,7 @@ export function UsersTable({ usersData }) {
       prevUsers.filter((user) => user.user_id !== deleteUserID)
     );
     try {
-      await fetch("/api/delete-user", {
+      await fetch("/api/admin/delete-user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

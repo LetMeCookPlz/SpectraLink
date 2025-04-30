@@ -61,7 +61,7 @@ export function PlansTable({ plansData }) {
   const handleEditPlan = async () => {
     setEditDialogOpen(false);
     try {
-      const response = await fetch("/api/edit-plan", {
+      const response = await fetch("/api/admin/edit-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(editPlan),
@@ -81,7 +81,7 @@ export function PlansTable({ plansData }) {
 	const handleCreatePlan = async () => {
     setCreateDialogOpen(false);
     try {
-      const response = await fetch("/api/create-plan", {
+      const response = await fetch("/api/admin/create-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newPlan),

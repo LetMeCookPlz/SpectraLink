@@ -2,3 +2,5 @@ node_modules
 .next/cache
 Dockerfile
 .dockerignore
+.env.local
+.env

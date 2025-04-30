@@ -1,3 +1,5 @@
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/pages/api/auth/[...nextauth].js'
 import React from 'react';
 import localFont from "next/font/local";
 import "./globals.css";
@@ -5,35 +7,13 @@ import Link from 'next/link'
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
 import { UserMenu } from "@/app/components/user-menu"
-import { ChevronDown } from 'lucide-react'
-import { cookies } from 'next/headers';
-import { verifySession } from '@/lib/redis.js';
+import { Providers } from "@/app/components/providers"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -52,15 +32,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const session_id = cookies().get('session_id');
-  let sessionData = null;
-  if (session_id) {
-    sessionData = await verifySession(session_id);
-  }
-	let isPrivileged = false;
-	if (sessionData && sessionData.user_type != 'Customer') {
-		isPrivileged = true;
-	}
+  const session = await getServerSession(authOptions)
+  const isPrivileged = session?.user?.user_type !== 'Customer'
 
   return (
     <html lang="en">
@@ -74,31 +47,33 @@ export default async function RootLayout({ children }) {
                 </Link>
               </div>
 
-							<div className="fixed left-1/2 transform -translate-x-1/2">
-              <NavigationMenu>
-                <NavigationMenuList className="flex space-x-8">
-                  <NavigationMenuItem>
-                    <Link href="/" legacyBehavior passHref>
-                      <NavigationMenuLink className={`${navigationMenuTriggerStyle()} text-xl`}>
-                        Головна
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <Link href="/plans" legacyBehavior passHref>
-                      <NavigationMenuLink className={`${navigationMenuTriggerStyle()} text-xl`}>
-                        Тарифні плани
-                      </NavigationMenuLink>
-                    </Link>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-							</div>
+              <div className="fixed left-1/2 transform -translate-x-1/2">
+                <NavigationMenu>
+                  <NavigationMenuList className="flex space-x-8">
+                    <NavigationMenuItem>
+                      <Link href="/" legacyBehavior passHref>
+                        <NavigationMenuLink className={`${navigationMenuTriggerStyle()} text-xl`}>
+                          Головна
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                    <NavigationMenuItem>
+                      <Link href="/plans" legacyBehavior passHref>
+                        <NavigationMenuLink className={`${navigationMenuTriggerStyle()} text-xl`}>
+                          Тарифні плани
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              </div>
 
               <div className="flex items-center">
-                {sessionData ? (
-                  <UserMenu email={sessionData.email} isPrivileged={isPrivileged}/>
-                ) : (
+                {session ? (
+									<Providers session={session}>
+                  <UserMenu email={session.user?.email} isPrivileged={isPrivileged} />
+									</Providers>
+								) : (
                   <>
                     <Button variant="outline" className="mr-2">
                       <Link href="/login">Увійти</Link>
@@ -115,6 +90,5 @@ export default async function RootLayout({ children }) {
         {children}
       </body>
     </html>
-  );
+  )
 }
-

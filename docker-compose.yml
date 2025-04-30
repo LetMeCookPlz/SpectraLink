@@ -11,6 +11,7 @@ services:
       - MYSQL_PASSWORD=sjOvqbtgfEC2atHCMAqMVZcpd5jAsnPziLRKn6NG
       - MYSQL_DB=spectralink
       - REDIS_HOST=redis
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
     depends_on:
       - mysql
       - redis

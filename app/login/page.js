@@ -12,38 +12,47 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { AlertCircle } from 'lucide-react'
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
+import { signIn } from "next-auth/react"
 
 export default function LoginComponent() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/plans'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError("") 
+    setError("")
+    setIsLoading(true)
+    
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+        callbackUrl
       })
-      if (response.ok) {
-        router.push('/plans')
-        window.location.reload()
+
+      if (result?.error) {
+        setError(result.error)
       } else {
-        const data = await response.json()
-        setError(data.message || "Login failed. Please try again.")
+        router.push(callbackUrl)
+				window.location.reload()
       }
     } catch (error) {
-      setError("An error occurred. Please try again.")
+      setError("Сталася помилка. Будь ласка, спробуйте ще раз.")
+    } finally {
+      setIsLoading(false)
     }
   }
   
@@ -88,7 +97,9 @@ export default function LoginComponent() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" type="submit">Увійти</Button>
+            <Button className="w-full" type="submit" disabled={isLoading}>
+              Увійти
+            </Button>
           </CardFooter>
         </form>
       </Card>

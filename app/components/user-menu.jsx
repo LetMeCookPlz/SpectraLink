@@ -32,6 +32,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 import { ChevronDown } from 'lucide-react'
+import { signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react';
 
 export function UserMenu({ email, isPrivileged }) {
   const router = useRouter()
@@ -39,6 +41,8 @@ export function UserMenu({ email, isPrivileged }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newEmail, setNewEmail] = useState(email)
   const [newPassword, setNewPassword] = useState('')
+	const { update } = useSession();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,7 +58,9 @@ export function UserMenu({ email, isPrivileged }) {
         body: JSON.stringify(formData),
       });
       if (response.ok) {
-        window.location.reload();
+				setIsDialogOpen(false);
+				if (newEmail) await update({ email: newEmail });
+        router.refresh();
       } else {
         console.error("Failed to save settings.");
       }
@@ -66,19 +72,16 @@ export function UserMenu({ email, isPrivileged }) {
   const handleLogout = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch('/api/logout', {
-        method: 'POST',
-      }) 
-      if (response.ok) {
-        router.push('/')
-        window.location.reload()
-      } else {
-        console.error('Failed to log out');
-      } 
+      await signOut({
+        redirect: false, 
+        callbackUrl: '/'
+      })
+      router.push('/') 
+      router.refresh() 
     } catch (error) {
-      console.error("An error occurred:", error)
+      console.error('Помилка при виході:', error)
     }
-  };
+  }
 
   return (
     <div className="flex items-center gap-2">
