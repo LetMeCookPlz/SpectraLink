@@ -10,11 +10,11 @@ import {
 } from "@/components/ui/card";
 import pool from '@/lib/db';
 import Details from '@/app/components/details'; 
+import { getOrSetCache } from "@/lib/redis";
 
 export default async function Component() {
   try {
-    const [plans] = await pool.query('SELECT * FROM Plans');
-    
+    const plans = await getOrSetCache('plans', async () => await pool.query('SELECT * FROM Plans'));
     return (
       <div className="flex flex-wrap items-center justify-center min-h-screen bg-background text-center">
         {plans.map((plan) => (

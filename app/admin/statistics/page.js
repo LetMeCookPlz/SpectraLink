@@ -2,11 +2,12 @@
 
 import pool from '@/lib/db';
 import { PlansChart } from "@/app/components/plans-chart"
+import { getOrSetCache } from "@/lib/redis";
 
 export default async function Component() {
   try {
     const [connections] = await pool.query('SELECT * FROM Connections');
-    const [plans] = await pool.query('SELECT * FROM Plans');
+    const plans = await getOrSetCache('plans', async () => await pool.query('SELECT * FROM Plans'));
     return (
 			<PlansChart connections={connections} plans={plans}/>
     );
