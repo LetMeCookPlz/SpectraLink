@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Connections (
     user_id INT NOT NULL,
     plan_id INT NOT NULL,
     address VARCHAR(60) NOT NULL,
-    connection_type ENUM('Coaxidal', 'Fiber', 'DSL') NOT NULL,
+    connection_type ENUM('Коаксідальне', 'Оптоволокно', 'DSL') NOT NULL,
     status BOOL DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (plan_id) REFERENCES Plans(plan_id)
