@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { AlertCircle } from 'lucide-react'
 import {
   Alert,
@@ -27,8 +27,6 @@ export default function LoginComponent() {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/plans'
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -39,14 +37,13 @@ export default function LoginComponent() {
       const result = await signIn('credentials', {
         redirect: false,
         email,
-        password,
-        callbackUrl
+        password
       })
 
       if (result?.error) {
         setError(result.error)
       } else {
-        router.push(callbackUrl)
+        router.push('/plans')
 				window.location.reload()
       }
     } catch (error) {
