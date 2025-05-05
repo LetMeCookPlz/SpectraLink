@@ -1,6 +1,15 @@
-node_modules
-.next/cache
+**/node_modules
+.next
+!.next/standalone/**
+!.next/static/**
+
+.git
+.gitignore
+.github
+
 Dockerfile
 .dockerignore
+docker-compose.yml
+
 .env.local
 .env
