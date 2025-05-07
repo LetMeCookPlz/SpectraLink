@@ -1,7 +1,7 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-const PUBLIC_ROUTES = ["/", "/login", "/signup", "plans", "/api/signup", "/api/plans", "public/images/background.jpg"];
+const PUBLIC_ROUTES = ["/", "/login", "/signup", "/plans", "/api/signup", "/api/plans", "public/images/background.jpg"];
 const ADMIN_ROUTES = ["/admin", "/api/admin"];
 
 export async function middleware(req) {
