@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS Connections (
 
 CREATE TABLE IF NOT EXISTS Transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
+    user_id INT,
     sum INT NOT NULL,
     date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
 );
 
 INSERT INTO Users (PIB, email, password, user_type) VALUES ('admin', 'admin@mail.com', '$2a$04$6aquDUeFU2rjcijeJfG/oO2NH6eHbIlUw37WAo7hG5OooN5rotZ0S', 'Admin');
