@@ -30,6 +30,12 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { AlertCircle } from 'lucide-react'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
 import { useRouter } from "next/navigation"
 import { ChevronDown } from 'lucide-react'
 import { signOut } from 'next-auth/react'
@@ -41,11 +47,13 @@ export function UserMenu({ email, isPrivileged }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newEmail, setNewEmail] = useState(email)
   const [newPassword, setNewPassword] = useState('')
+  const [error, setError] = useState("")
 	const { update } = useSession();
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("") 
     const formData = {};
     if (newEmail) formData.newEmail = newEmail;
     if (newPassword) formData.newPassword = newPassword;
@@ -57,12 +65,13 @@ export function UserMenu({ email, isPrivileged }) {
         },
         body: JSON.stringify(formData),
       });
+			const data = await response.json();
       if (response.ok) {
 				setIsDialogOpen(false);
 				if (newEmail) await update({ email: newEmail });
         router.refresh();
       } else {
-        console.error("Failed to save settings.");
+        setError(data.message || "Не вдалося зберегти налаштування.");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -156,6 +165,13 @@ export function UserMenu({ email, isPrivileged }) {
               Тут ви можете змінювати свої особисті дані. Натисність "Зберігти зміни", коли будете готові.
             </DialogDescription>
           </DialogHeader>
+					{error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Помилка</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
