@@ -6,15 +6,15 @@ CREATE TABLE IF NOT EXISTS Users (
     PIB VARCHAR(30) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(64) NOT NULL,
-    balance INT UNSIGNED DEFAULT 0,
-    user_type ENUM('Customer', 'Employee', 'Admin') DEFAULT 'Customer'
+    balance DECIMAL(10,2) UNSIGNED DEFAULT 0 NOT NULL,
+    user_type ENUM('Customer', 'Employee', 'Admin') DEFAULT 'Customer' NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Plans (
     plan_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(30) NOT NULL UNIQUE,
     price INT UNSIGNED NOT NULL,
-    volume INT UNSIGNED,
+    volume INT UNSIGNED NOT NULL,
     bandwidth SMALLINT UNSIGNED NOT NULL
 );
 
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Connections (
     plan_id INT NOT NULL,
     address VARCHAR(60) NOT NULL,
     connection_type ENUM('Коаксідальне', 'Оптоволокно', 'DSL') NOT NULL,
-    status BOOL DEFAULT 0,
+    status BOOL DEFAULT 0 NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (plan_id) REFERENCES Plans(plan_id)
 );

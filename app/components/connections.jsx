@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,15 +12,28 @@ import {
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Slider } from "@/components/ui/slider";
-import BalanceCard from "@/app/components/balance-card";
 
 export default function Connections({ connections, plans, userBalance }) {
   const [localConnections, setLocalConnections] = useState(connections);
-  const [balance, setBalance] = useState(userBalance);
+  const [balance, setBalance] = useState(Number(userBalance));
   const [amount, setAmount] = useState(0);
   const [selectedPlanId, setSelectedPlanId] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [changingConnectionId, setChangingConnectionId] = useState(null);
+  const [proratedPrices, setProratedPrices] = useState({});
+
+  useEffect(() => {
+    const today = new Date();
+    const currentDay = today.getDate();
+    const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+    const remainingDays = daysInMonth - currentDay + 1;
+
+    const prices = {};
+    plans.forEach(plan => {
+      prices[plan.plan_id] = (plan.price / daysInMonth * remainingDays).toFixed(2);
+    });
+    setProratedPrices(prices);
+  }, [plans]);
 
   const handleAddBalance = async (e) => {
     e.preventDefault();
@@ -40,12 +53,13 @@ export default function Connections({ connections, plans, userBalance }) {
     }
   };
 
-  const activateConnection = async (sum, connection_id, plan_id) => {
+  const activateConnection = async (connection_id, plan_id) => {
+    const price = parseFloat(proratedPrices[plan_id]);
     try {
-      const response = await fetch('/api/balance', {
+      const response = await fetch('/api/activate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sum, connection_id, plan_id }),
+        body: JSON.stringify({ connection_id }),
       });
       const data = await response.json();
       if (response.ok) {
@@ -56,7 +70,7 @@ export default function Connections({ connections, plans, userBalance }) {
               : connection
           )
         );
-        setBalance((prevBalance) => prevBalance + sum);
+        setBalance((prevBalance) => prevBalance - price);
       } else {
         alert(`Error: ${data.message}`);
       }
@@ -71,7 +85,10 @@ export default function Connections({ connections, plans, userBalance }) {
       const response = await fetch('/api/change-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ connection_id: changingConnectionId, plan_id: selectedPlanId }),
+        body: JSON.stringify({ 
+          connection_id: changingConnectionId, 
+          plan_id: selectedPlanId
+        }),
       });
 
       if (response.ok) {
@@ -94,7 +111,11 @@ export default function Connections({ connections, plans, userBalance }) {
   };
 
   const planMap = plans.reduce((map, plan) => {
-    map[plan.plan_id] = { name: plan.name, price: plan.price };
+    map[plan.plan_id] = { 
+      name: plan.name, 
+      monthly_price: plan.price,
+      prorated_price: proratedPrices[plan.plan_id] || plan.price.toFixed(2)
+    };
     return map;
   }, {});
 
@@ -135,7 +156,7 @@ export default function Connections({ connections, plans, userBalance }) {
       <div className="flex flex-wrap items-center justify-center min-h-screen bg-background text-center mt-[-200px]">
         {localConnections.map((connection) => {
           const plan = planMap[connection.plan_id];
-          const activationPrice = plan.price;
+          const activationPrice = parseFloat(plan.prorated_price);
 
           return (
             <Card key={connection.id} className="w-full max-w-sm m-10">
@@ -143,7 +164,7 @@ export default function Connections({ connections, plans, userBalance }) {
                 <CardTitle className="text-xl">{connection.address}</CardTitle>
               </CardHeader>
               <CardContent className="grid gap-4">
-							<p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
+                <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
                   Тип підключення: {connection.connection_type}
                 </p>
                 <Select
@@ -160,32 +181,24 @@ export default function Connections({ connections, plans, userBalance }) {
                   <SelectContent>
                     {plans.map((plan) => (
                       <SelectItem key={plan.plan_id} value={plan.plan_id.toString()}>
-                        {plan.name}
+                        {plan.name} (${planMap[plan.plan_id].monthly_price} / місяць)
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
-                  Статус: {connection.status === 1 ? 'Активований' : 'Не активаний'}
+                  Статус: {connection.status === 1 ? 'Активоване' : 'Не активоване'}
                 </p>
               </CardContent>
               <CardFooter>
                 <Button
                   className="w-full rounded-full"
-                  onClick={() =>
-                    activateConnection(
-                      activationPrice * -1,
-                      connection.connection_id,
-                      connection.plan_id
-                    )
-                  }
-                  disabled={
-                    connection.status === 1 || balance < activationPrice
-                  }
+                  onClick={() => activateConnection(connection.connection_id, connection.plan_id)}
+                  disabled={connection.status === 1 || balance < activationPrice}
                 >
                   {connection.status === 1
-                    ? 'Активований'
-                    : `Activate ($${activationPrice.toFixed(2)})`}
+                    ? 'Активоване'
+                    : `Активувати ($${activationPrice.toFixed(2)})`}
                 </Button>
               </CardFooter>
             </Card>
@@ -199,12 +212,19 @@ export default function Connections({ connections, plans, userBalance }) {
               Зміна тарифного плану
             </AlertDialogTitle>
           </AlertDialogHeader>
-          <p>Чи точно ви хочете змінити тарифний план? Ви будете повинні оплатити послугу по її новій ціні.</p>
+          <p>
+            Чи точно ви хочете змінити тарифний план? 
+						Щоб продовжити користуватися послугою після зміни, буде необхідно сплатити її нову ціну.
+            <br /><br />
+            <strong>Пропорційна вартість до кінця місяця: ${proratedPrices[selectedPlanId]}</strong>
+          </p>
           <AlertDialogFooter>
             <Button onClick={() => setDialogOpen(false)} variant="secondary">
               Відмінити
             </Button>
-            <Button onClick={handleChangePlan}>Підтвердити</Button>
+            <Button onClick={handleChangePlan}>
+              Підтвердити
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
