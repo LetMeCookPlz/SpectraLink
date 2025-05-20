@@ -272,7 +272,7 @@ export function UsersTable({ usersData }) {
   			<DialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }}>
   			  <DialogHeader>
   			    <DialogTitle>Редагування користувача</DialogTitle>
-  			    <DialogDescription>Натисніть "Зберігти зміни", коли будете готові.</DialogDescription>
+  			    <DialogDescription>Натисніть "Зберегти зміни", коли будете готові.</DialogDescription>
   			  </DialogHeader>
 					<form >
   			  <div className="grid gap-4 py-4">
@@ -344,7 +344,7 @@ export function UsersTable({ usersData }) {
   			    <Button onClick={() => setEditDialogOpen(false)} variant="secondary">
   			      Відмінити
   			    </Button>
-  			    <Button onClick={handleEditUser}>Зберегти</Button>
+  			    <Button onClick={handleEditUser}>Зберегти зміни</Button>
   			  </DialogFooter>
   			</DialogContent>
 			</Dialog>

@@ -281,7 +281,7 @@ export function PlansTable({ plansData }) {
         <DialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)'}}>
           <DialogHeader>
             <DialogTitle>Редагування плану</DialogTitle>
-						<DialogDescription>Натисніть "Зберігти зміни", коли будете готові.</DialogDescription>
+						<DialogDescription>Натисніть "Зберегти зміни", коли будете готові.</DialogDescription>
           </DialogHeader>
           <form>
             <div className="grid gap-4 py-4">
@@ -335,7 +335,7 @@ export function PlansTable({ plansData }) {
             <Button variant="secondary" onClick={() => setEditDialogOpen(false)}>
               Відмінити
             </Button>
-            <Button onClick={handleEditPlan}>Зберігти зміни</Button>
+            <Button onClick={handleEditPlan}>Зберегти зміни</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
