@@ -22,11 +22,11 @@ export default async function handler(req, res) {
   	JOIN Plans p ON c.plan_id = p.plan_id
   	SET 
   	  u.balance = u.balance - @prorated,
-  	  c.status = 1
+  	  c.status = 'Активне'
   	WHERE 
   	  c.connection_id = ?
   	  AND c.user_id = ?
-  	  AND c.status = 0
+  	  AND c.status = 'Призупинене'
   	  AND u.balance >= @prorated;
 
   	INSERT INTO Transactions (user_id, sum)

@@ -66,7 +66,7 @@ export default function Connections({ connections, plans, userBalance }) {
         setLocalConnections((prevConnections) =>
           prevConnections.map((connection) =>
             connection.connection_id === connection_id
-              ? { ...connection, status: 1 }
+              ? { ...connection, status: 'Активне' }
               : connection
           )
         );
@@ -95,7 +95,7 @@ export default function Connections({ connections, plans, userBalance }) {
         setLocalConnections((prevConnections) =>
           prevConnections.map((connection) =>
             connection.connection_id === changingConnectionId
-              ? { ...connection, plan_id: selectedPlanId, status: 0 }
+              ? { ...connection, plan_id: selectedPlanId, status: "Призупинене" }
               : connection
           )
         );
@@ -167,6 +167,11 @@ export default function Connections({ connections, plans, userBalance }) {
                 <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
                   Тип підключення: {connection.connection_type}
                 </p>
+								{connection.status === 'Очікується' ? (
+								<p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
+                  Тарифний план: {plan.name}
+                </p>
+								) : (
                 <Select
                   value={connection.plan_id.toString()}
                   onValueChange={(value) => {
@@ -186,21 +191,28 @@ export default function Connections({ connections, plans, userBalance }) {
                     ))}
                   </SelectContent>
                 </Select>
+								)}
                 <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
-                  Статус: {connection.status === 1 ? 'Активоване' : 'Не активоване'}
+                  Статус: {connection.status}
                 </p>
               </CardContent>
               <CardFooter>
-                <Button
-                  className="w-full rounded-full"
-                  onClick={() => activateConnection(connection.connection_id, connection.plan_id)}
-                  disabled={connection.status === 1 || balance < activationPrice}
-                >
-                  {connection.status === 1
-                    ? 'Активоване'
-                    : `Активувати ($${activationPrice.toFixed(2)})`}
-                </Button>
-              </CardFooter>
+						  {connection.status === 'Очікується' ? (
+						    <div className="w-full text-center">
+						      Ваше підключення в процесі встановлення
+						    </div>
+						  ) : (
+						    <Button
+						      className="w-full rounded-full"
+						      onClick={() => activateConnection(connection.connection_id, connection.plan_id)}
+						      disabled={connection.status == 'Активне' || balance < activationPrice}
+						    >
+						      {connection.status === 'Активне'
+						        ? 'Активовано'
+						        : `Активувати ($${activationPrice.toFixed(2)})`}
+						    </Button>
+						  )}
+						</CardFooter>
             </Card>
           );
         })}

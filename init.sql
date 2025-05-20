@@ -3,7 +3,7 @@ ALTER DATABASE spectralink CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS Users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
-    PIB VARCHAR(30) NOT NULL,
+    PIB VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(64) NOT NULL,
     balance DECIMAL(10,2) UNSIGNED DEFAULT 0 NOT NULL,
@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS Connections (
     plan_id INT NOT NULL,
     address VARCHAR(60) NOT NULL,
     connection_type ENUM('Коаксідальне', 'Оптоволокно', 'DSL') NOT NULL,
-    status BOOL DEFAULT 0 NOT NULL,
+    status ENUM('Очікується', 'Активне', 'Призупинене') DEFAULT 'Очікується' NOT NULL,
+    recurring_billing BOOL DEFAULT 1 NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (plan_id) REFERENCES Plans(plan_id)
 );
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS Connections (
 CREATE TABLE IF NOT EXISTS Transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
-    sum INT NOT NULL,
+    sum DECIMAL(10,2) NOT NULL,
     date DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
 );

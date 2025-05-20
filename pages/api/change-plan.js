@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 		const session = await getServerSession(req, res, authOptions)
 		const user = session.user;
 		const {connection_id, plan_id } = req.body;
-		await pool.query('UPDATE Connections SET plan_id = ?, status = 0 WHERE connection_id = ? AND user_id = ?', [plan_id, connection_id, user.id]);
+		await pool.query(`UPDATE Connections SET plan_id = ?, status = 'Призупинене' WHERE connection_id = ? AND user_id = ? AND status != 'Очікується'`, [plan_id, connection_id, user.id]);
 		return res.status(200).json({ message: 'Plan changed successfully' });
 	} catch (error) {
 		console.error('Transaction error:', error);

@@ -102,6 +102,9 @@ export function UserMenu({ email, isPrivileged }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
+						<DropdownMenuItem asChild>
+              <Link href="/admin/connections" className="w-full">Підключення</Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/admin/users" className="w-full">Користувачі</Link>
             </DropdownMenuItem>
