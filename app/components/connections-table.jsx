@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -46,15 +46,17 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export function ConnectionsTable({ connectionsData, plansData }) {
-  const [connections, setConnections] = useState(
-    connectionsData.sort((a, b) => (a.status === "Очікується" ? -1 : 1))
-  );
+  const [connections, setConnections] = useState(connectionsData);
+	useEffect(() => {
+    setConnections(connectionsData.sort((a, b) => (a.status === "Очікується" ? -1 : 1)));
+  }, [connectionsData]);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editConnection, setEditConnection] = useState({});
   const [deleteConnectionID, setDeleteConnectionID] = useState(null);
+	const [billingDialogOpen, setBillingDialogOpen] = useState(false);
 
 	const handleSetup = async (connection) => {
     try {
@@ -120,6 +122,21 @@ export function ConnectionsTable({ connectionsData, plansData }) {
       console.error(err);
     }
   };
+
+	const handleRunBilling = async () => {
+  setBillingDialogOpen(false);
+  try {
+    const response = await fetch("/api/admin/run-billing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) throw new Error("Failed to run billing");
+    console.log("Billing completed successfully");
+		window.location.reload();
+  } catch (err) {
+    console.error("Error running billing:", err);
+  }
+};
 
   const columns = [
     {
@@ -284,24 +301,33 @@ export function ConnectionsTable({ connectionsData, plansData }) {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4 w-full max-w-4xl">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Попередня
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Наступна
-        </Button>
-      </div>
+      <div className="flex items-center justify-between w-full max-w-4xl">
+  			<Button
+  			  variant="outline"
+  			  size="sm"
+  			  onClick={() => setBillingDialogOpen(true)}
+  			>
+  			  Провести білінг
+  			</Button>
+				<div className="flex items-center justify-end space-x-2 py-4">
+      	  <Button
+      	    variant="outline"
+      	    size="sm"
+      	    onClick={() => table.previousPage()}
+      	    disabled={!table.getCanPreviousPage()}
+      	  >
+      	    Попередня
+      	  </Button>
+      	  <Button
+      	    variant="outline"
+      	    size="sm"
+      	    onClick={() => table.nextPage()}
+      	    disabled={!table.getCanNextPage()}
+      	  >
+      	    Наступна
+      	  </Button>
+      	</div>
+    	</div>
 
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
@@ -429,6 +455,22 @@ export function ConnectionsTable({ connectionsData, plansData }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+			{/* Billing Confirmation */}
+			<AlertDialog open={billingDialogOpen} onOpenChange={setBillingDialogOpen}>
+			  <AlertDialogContent style={{ backgroundColor: "hsl(222.2, 84%, 4.9%)" }}>
+			    <AlertDialogHeader>
+			      <AlertDialogTitle>Білінг</AlertDialogTitle>
+			    </AlertDialogHeader>
+			    <p>Ви впевнені, що хочете провести білінг для всіх активних підключень?</p>
+			    <AlertDialogFooter>
+			      <Button onClick={() => setBillingDialogOpen(false)} variant="secondary">
+			        Відмінити
+			      </Button>
+			      <Button onClick={handleRunBilling}>Підтвердити</Button>
+			    </AlertDialogFooter>
+			  </AlertDialogContent>
+			</AlertDialog>
     </div>
   );
 }

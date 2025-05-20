@@ -110,6 +110,34 @@ export default function Connections({ connections, plans, userBalance }) {
     }
   };
 
+  const handleRecurringBillingChange = async (connection_id, newStatus) => {
+    try {
+      const response = await fetch('/api/billing-mode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          connection_id,
+          recurring_billing: newStatus
+        }),
+      });
+
+      if (response.ok) {
+        setLocalConnections((prevConnections) =>
+          prevConnections.map((connection) =>
+            connection.connection_id === connection_id
+              ? { ...connection, recurring_billing: newStatus }
+              : connection
+          )
+        );
+      } else {
+        alert('Error updating recurring billing mode.');
+      }
+    } catch (error) {
+      console.error('Error updating billing mode:', error);
+      alert('An unexpected error occurred.');
+    }
+  };
+
   const planMap = plans.reduce((map, plan) => {
     map[plan.plan_id] = { 
       name: plan.name, 
@@ -121,11 +149,11 @@ export default function Connections({ connections, plans, userBalance }) {
 
   return (
     <div className='pt-16'>
-      <Card className="w-full max-w-md mx-auto bg-transparent border-transparent mt-4">
+      <Card className="w-full max-w-md mx-auto bg-transparent border-transparent">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">Ваш баланс</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent>
           <div className="text-4xl font-bold text-center" aria-live="polite">
             ${balance.toFixed(2)}
           </div>
@@ -153,7 +181,7 @@ export default function Connections({ connections, plans, userBalance }) {
           </Button>
         </CardFooter>
       </Card>
-      <div className="flex flex-wrap items-center justify-center min-h-screen bg-background text-center mt-[-200px]">
+      <div className="flex flex-wrap items-center justify-center min-h-screen bg-background text-center mt-[-170px]">
         {localConnections.map((connection) => {
           const plan = planMap[connection.plan_id];
           const activationPrice = parseFloat(plan.prorated_price);
@@ -167,11 +195,11 @@ export default function Connections({ connections, plans, userBalance }) {
                 <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
                   Тип підключення: {connection.connection_type}
                 </p>
-								{connection.status === 'Очікується' ? (
-								<p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
+                {connection.status === 'Очікується' ? (
+                <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
                   Тарифний план: {plan.name}
                 </p>
-								) : (
+                ) : (
                 <Select
                   value={connection.plan_id.toString()}
                   onValueChange={(value) => {
@@ -191,28 +219,42 @@ export default function Connections({ connections, plans, userBalance }) {
                     ))}
                   </SelectContent>
                 </Select>
-								)}
+                )}
                 <p className="outline outline-2 outline-secondary rounded-full text-lg text-center h-[2.5rem] flex items-center justify-center">
                   Статус: {connection.status}
                 </p>
+                <Select
+                  value={connection.recurring_billing ? "1" : "0"}
+                  onValueChange={(value) => 
+                    handleRecurringBillingChange(connection.connection_id, value === "1")
+                  }
+                >
+                <SelectTrigger className="outline outline-1 outline-secondary rounded-full text-lg text-center flex items-center justify-center h-[2.5rem]">
+                  Автоплатіж: {connection.recurring_billing ? "Увімкнений" : "Вимкнений"}
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Увімкнений</SelectItem>
+                  <SelectItem value="0">Вимкнений</SelectItem>
+                  </SelectContent>
+                </Select>
               </CardContent>
               <CardFooter>
-						  {connection.status === 'Очікується' ? (
-						    <div className="w-full text-center">
-						      Ваше підключення в процесі встановлення
-						    </div>
-						  ) : (
-						    <Button
-						      className="w-full rounded-full"
-						      onClick={() => activateConnection(connection.connection_id, connection.plan_id)}
-						      disabled={connection.status == 'Активне' || balance < activationPrice}
-						    >
-						      {connection.status === 'Активне'
-						        ? 'Активовано'
-						        : `Активувати ($${activationPrice.toFixed(2)})`}
-						    </Button>
-						  )}
-						</CardFooter>
+                {connection.status === 'Очікується' ? (
+                  <div className="w-full text-center">
+                    Ваше підключення в процесі встановлення
+                  </div>
+                ) : (
+                  <Button
+                    className="w-full rounded-full"
+                    onClick={() => activateConnection(connection.connection_id, connection.plan_id)}
+                    disabled={connection.status == 'Активне' || balance < activationPrice}
+                  >
+                    {connection.status === 'Активне'
+                      ? 'Активовано'
+                      : `Активувати ($${activationPrice.toFixed(2)})`}
+                  </Button>
+                )}
+              </CardFooter>
             </Card>
           );
         })}
@@ -226,7 +268,7 @@ export default function Connections({ connections, plans, userBalance }) {
           </AlertDialogHeader>
           <p>
             Чи точно ви хочете змінити тарифний план? 
-						Щоб продовжити користуватися послугою після зміни, буде необхідно сплатити її нову ціну.
+            Щоб продовжити користуватися послугою після зміни, буде необхідно сплатити її нову ціну.
             <br /><br />
             <strong>Пропорційна вартість до кінця місяця: ${proratedPrices[selectedPlanId]}</strong>
           </p>
