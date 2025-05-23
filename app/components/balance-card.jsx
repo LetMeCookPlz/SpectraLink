@@ -30,16 +30,16 @@ export default function BalanceCard({ userBalance }) {
   return (
     <Card className="w-full max-w-md mx-auto bg-transparent border-transparent mt-4">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">Your Balance</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center">Ваш баланс</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="text-4xl font-bold text-center" aria-live="polite">
-          ${balance.toFixed(2)}
+          ₴{balance.toFixed(2)}
         </div>
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-muted-foreground">
-            <span>Add Funds</span>
-            <span>${amount.toFixed(2)}</span>
+            <span>Поповнення балансу</span>
+            <span>₴{amount.toFixed(2)}</span>
           </div>
           <Slider
             value={[amount]}
@@ -56,7 +56,7 @@ export default function BalanceCard({ userBalance }) {
           onClick={handleAddBalance}
           disabled={amount <= 0}
         >
-          Add ${amount.toFixed(2)} to Balance
+          Поповнити баланс на ₴{amount.toFixed(2)}
         </Button>
       </CardFooter>
     </Card>

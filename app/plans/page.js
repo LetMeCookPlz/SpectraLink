@@ -30,7 +30,7 @@ export default async function Component() {
                 Об'єм: {plan.volume} ГБ / місяць
               </p>
               <p className="outline outline-1 outline-secondary rounded-full text-lg">
-                Ціна: ${plan.price} / місяць
+                Ціна: {plan.price} ₴ / місяць
               </p>
             </CardContent>
             <CardFooter>

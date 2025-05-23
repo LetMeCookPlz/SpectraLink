@@ -155,12 +155,12 @@ export default function Connections({ connections, plans, userBalance }) {
         </CardHeader>
         <CardContent>
           <div className="text-4xl font-bold text-center" aria-live="polite">
-            ${balance.toFixed(2)}
+            {balance.toFixed(2)} ₴
           </div>
           <div className="space-y-2">
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Додати фінанси</span>
-              <span>${amount.toFixed(2)}</span>
+              <span>{amount.toFixed(2)} ₴</span>
             </div>
             <Slider
               value={[amount]}
@@ -177,7 +177,7 @@ export default function Connections({ connections, plans, userBalance }) {
             onClick={handleAddBalance}
             disabled={amount <= 0}
           >
-            Поповнити баланс на ${amount.toFixed(2)}
+            Поповнити баланс на {amount.toFixed(2)} ₴
           </Button>
         </CardFooter>
       </Card>
@@ -214,7 +214,7 @@ export default function Connections({ connections, plans, userBalance }) {
                   <SelectContent>
                     {plans.map((plan) => (
                       <SelectItem key={plan.plan_id} value={plan.plan_id.toString()}>
-                        {plan.name} (${planMap[plan.plan_id].monthly_price} / місяць)
+                        {plan.name} ({planMap[plan.plan_id].monthly_price} ₴ / місяць)
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -251,7 +251,7 @@ export default function Connections({ connections, plans, userBalance }) {
                   >
                     {connection.status === 'Активне'
                       ? 'Активовано'
-                      : `Активувати ($${activationPrice.toFixed(2)})`}
+                      : `Активувати (${activationPrice.toFixed(2)} ₴)`}
                   </Button>
                 )}
               </CardFooter>
@@ -270,7 +270,7 @@ export default function Connections({ connections, plans, userBalance }) {
             Чи точно ви хочете змінити тарифний план? 
             Щоб продовжити користуватися послугою після зміни, буде необхідно сплатити її нову ціну.
             <br /><br />
-            <strong>Пропорційна вартість до кінця місяця: ${proratedPrices[selectedPlanId]}</strong>
+            <strong>Пропорційна вартість до кінця місяця: {proratedPrices[selectedPlanId]} ₴</strong>
           </p>
           <AlertDialogFooter>
             <Button onClick={() => setDialogOpen(false)} variant="secondary">

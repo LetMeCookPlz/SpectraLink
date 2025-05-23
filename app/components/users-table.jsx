@@ -125,9 +125,9 @@ export function UsersTable({ usersData }) {
       header: () => <div>Баланс</div>,
       cell: ({ row }) => {
         const balance = parseFloat(row.getValue("balance"));
-        const formatted = new Intl.NumberFormat("en-US", {
+        const formatted = new Intl.NumberFormat("uk-UA", {
           style: "currency",
-          currency: "USD",
+          currency: "UAH",
         }).format(balance);
         return <div className="font-medium">{formatted}</div>;
       },
@@ -302,7 +302,7 @@ export function UsersTable({ usersData }) {
             </div>
 						<div className="grid grid-cols-4 items-center gap-4">
 						<Label htmlFor="email" className="text-right">
-            	Баланс ($)
+            	Баланс (₴)
             </Label>
 							<Input
 								id='balance'

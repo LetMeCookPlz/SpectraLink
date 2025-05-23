@@ -63,9 +63,9 @@ export function TransactionsTable({ transactionsData }) {
       ),
       cell: ({ row }) => {
         const sum = row.getValue("sum");
-        const formatted = new Intl.NumberFormat("en-US", {
+        const formatted = new Intl.NumberFormat("uk-UA", {
           style: "currency",
-          currency: "USD",
+          currency: "UAH",
           signDisplay: "always",
         }).format(sum);
         return <div className={`pl-3 font-medium ${sum < 0 ? "text-red-500" : "text-green-500"}`}>{formatted}</div>;

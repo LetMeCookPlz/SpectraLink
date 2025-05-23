@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
@@ -16,8 +15,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -36,15 +33,7 @@ import {
   DialogHeader,
   DialogFooter,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogFooter,
-} from "@/components/ui/alert-dialog";
 
 export function PlansTable({ plansData }) {
   const [plans, setPlans] = useState(plansData);
@@ -121,7 +110,7 @@ export function PlansTable({ plansData }) {
     {
       accessorKey: "price",
       header: "Ціна",
-      cell: ({ row }) => `$${row.getValue("price")}`,
+      cell: ({ row }) => `${row.getValue("price")} ₴`,
     },
     {
       accessorKey: "volume",
@@ -213,6 +202,8 @@ export function PlansTable({ plansData }) {
 			<Button className="mt-4" onClick={() => setCreateDialogOpen(true)}>
         Створити новий план
       </Button>
+
+      {/* Create Plan Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
         <DialogContent style={{ backgroundColor: "hsl(222.2, 84%, 4.9%)" }}>
           <DialogHeader>
@@ -235,7 +226,7 @@ export function PlansTable({ plansData }) {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="price" className="text-right">Ціна ($)</Label>
+                <Label htmlFor="price" className="text-right">Ціна (₴)</Label>
                 <Input
                   id="price"
                   value={newPlan.price}
@@ -277,6 +268,8 @@ export function PlansTable({ plansData }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Edit Plan Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)'}}>
           <DialogHeader>
@@ -297,7 +290,7 @@ export function PlansTable({ plansData }) {
                 />
               </div>
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="price" className="text-right">Ціна ($)</Label>
+                <Label htmlFor="price" className="text-right">Ціна (₴)</Label>
                 <Input
                   id="price"
                   value={editPlan?.price || ""}
