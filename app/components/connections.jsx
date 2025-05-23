@@ -181,6 +181,18 @@ export default function Connections({ connections, plans, userBalance }) {
           </Button>
         </CardFooter>
       </Card>
+
+			{localConnections.length === 0 && (
+			  <div className="flex flex-col items-center justify-center min-h-[10vh] gap-4">
+			    <p className="text-xl text-muted-foreground">
+			      У вас ще немає оформлених підключень
+			    </p>
+			    <Button asChild>
+			      <a href="/plans">Підключитися</a>
+			    </Button>
+			  </div>
+			)}
+
       <div className="flex flex-wrap items-center justify-center min-h-screen bg-background text-center mt-[-170px]">
         {localConnections.map((connection) => {
           const plan = planMap[connection.plan_id];
