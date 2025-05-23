@@ -13,7 +13,7 @@ export async function middleware(req) {
   }
 
   if (ADMIN_ROUTES.some(route => path.startsWith(route))) {
-    if (!token || token.user_type !== "Admin") {
+    if (!token || token.user_role !== "Admin") {
       return new NextResponse("Unauthorized", { status: 401 });
     }
     return NextResponse.next();

@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS Users (
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(64) NOT NULL,
     balance DECIMAL(10,2) UNSIGNED DEFAULT 0 NOT NULL,
-    user_type ENUM('Customer', 'Employee', 'Admin') DEFAULT 'Customer' NOT NULL
+    user_role ENUM('Client', 'Admin') DEFAULT 'Client' NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Plans (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Transactions (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
 );
 
-INSERT INTO Users (PIB, email, password, user_type) VALUES ('admin', 'admin@mail.com', '$2a$04$6aquDUeFU2rjcijeJfG/oO2NH6eHbIlUw37WAo7hG5OooN5rotZ0S', 'Admin');
+INSERT INTO Users (PIB, email, password, user_role) VALUES ('admin', 'admin@mail.com', '$2a$04$6aquDUeFU2rjcijeJfG/oO2NH6eHbIlUw37WAo7hG5OooN5rotZ0S', 'Admin');
 
 INSERT INTO Plans (name, price, volume, bandwidth) VALUES('Standard', 400, 250, 100);
 INSERT INTO Plans (name, price, volume, bandwidth) VALUES('Premium', 800, 500, 200);

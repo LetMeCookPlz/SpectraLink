@@ -16,7 +16,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -31,14 +30,10 @@ import {
 } from "@/components/ui/table";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   Dialog,
@@ -47,7 +42,6 @@ import {
   DialogHeader,
 	DialogFooter,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; 
 
@@ -139,9 +133,9 @@ export function UsersTable({ usersData }) {
       },
     },
     {
-      accessorKey: "user_type",
+      accessorKey: "user_role",
       header: "Тип користувача",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("user_type")}</div>,
+      cell: ({ row }) => <div className="capitalize">{row.getValue("user_role")}</div>,
     },
     {
       id: "actions",
@@ -268,6 +262,8 @@ export function UsersTable({ usersData }) {
           </Button>
         </div>
       </div>
+
+      {/* Edit User Dialog */}
 			<Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
   			<DialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }}>
   			  <DialogHeader>
@@ -319,21 +315,20 @@ export function UsersTable({ usersData }) {
   			    	/>
 						</div>
 						<div className="grid grid-cols-4 items-center gap-4">
-							<Label htmlFor="user_type" className="text-right">
+							<Label htmlFor="user_role" className="text-right">
             		Тип користув.
             	</Label>
 							<Select
-                value={editUser?.user_type || ""}
+                value={editUser?.user_role || ""}
 								onValueChange={(value) =>
-									setEditUser((prev) => ({ ...prev, user_type: value }))
+									setEditUser((prev) => ({ ...prev, user_role: value }))
 								}
               >
-                <SelectTrigger id="user_type" className="col-span-3">
+                <SelectTrigger id="user_role" className="col-span-3">
                   <SelectValue placeholder="Select the user type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Customer">Customer</SelectItem>
-                  <SelectItem value="Employee">Employee</SelectItem>
+                  <SelectItem value="Client">Client</SelectItem>
                   <SelectItem value="Admin">Admin</SelectItem>
                 </SelectContent>
               </Select>
@@ -348,6 +343,8 @@ export function UsersTable({ usersData }) {
   			  </DialogFooter>
   			</DialogContent>
 			</Dialog>
+
+      {/* Delete User Confirmation */}
 			<AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }}>
           <AlertDialogHeader>

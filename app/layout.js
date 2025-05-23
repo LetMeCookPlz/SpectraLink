@@ -33,7 +33,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   const session = await getServerSession(authOptions)
-  const isPrivileged = session?.user?.user_type !== 'Customer'
+  const isPrivileged = session?.user?.user_role === 'Admin'
 
   return (
     <html lang="en">

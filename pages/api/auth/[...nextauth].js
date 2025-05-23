@@ -27,7 +27,7 @@ const authOptions = ({
 					return {
 						id: user.user_id.toString(),
 						email: user.email,
-						user_type: user.user_type
+						user_role: user.user_role
 					}
 				
 				} catch (error) {
@@ -45,7 +45,7 @@ const authOptions = ({
 			if (user) {
 				token.id = user.id;
 				token.email = user.email;
-				token.user_type = user.user_type; 
+				token.user_role = user.user_role; 
 			}
 
 			if (trigger === "update" && session?.email) {
@@ -58,7 +58,7 @@ const authOptions = ({
 			if (session.user) {
 				session.user.id = token.id; 
 				session.user.email = token.email;
-				session.user.user_type = token.user_type; 
+				session.user.user_role = token.user_role; 
 			}
 			return session;
 		},
