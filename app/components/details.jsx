@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; 
 import { useRouter } from "next/navigation"
 
-export default function Details({ plan }) {
+export default function Details({ plan, loggedIn }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [address, setAddress] = useState('');
   const [connectionType, setConnectionType] = useState('Coaxial'); 
@@ -103,7 +103,7 @@ export default function Details({ plan }) {
 
       <Button
         className="w-full rounded-full"
-        onClick={() => setIsDialogOpen(true)} 
+        onClick={() => loggedIn ? setIsDialogOpen(true) : router.push('/login')}
       >
         Підключити
       </Button>

@@ -1,6 +1,5 @@
 'use server'
 
-import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -11,10 +10,15 @@ import {
 import pool from '@/lib/db';
 import Details from '@/app/components/details'; 
 import { getOrSetCache } from "@/lib/redis";
+import { getServerSession } from "next-auth";
+import { authOptions } from '@/pages/api/auth/[...nextauth].js';
 
 export default async function Component() {
   try {
-    const plans = await getOrSetCache('plans', async () => await pool.query('SELECT * FROM Plans'));
+		const session = await getServerSession(authOptions);
+		let loggedIn = false;
+		if (session) loggedIn = true;
+		const plans = await getOrSetCache('plans', async () => await pool.query('SELECT * FROM Plans'));
     return (
       <div className="flex flex-wrap items-center justify-center min-h-screen bg-background text-center">
         {plans.map((plan) => (
@@ -34,7 +38,7 @@ export default async function Component() {
               </p>
             </CardContent>
             <CardFooter>
-              <Details plan={plan} />
+              <Details plan={plan} loggedIn={loggedIn} />
             </CardFooter>
           </Card>
         ))}

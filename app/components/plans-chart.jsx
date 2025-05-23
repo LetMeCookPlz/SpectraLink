@@ -68,7 +68,7 @@ export function PlansChart({ connections, plans }) {
       <CardContent className="flex justify-center items-center">
         <ChartContainer
           config={chartConfig}
-          className="w-3/4 h-[300px] sm:w-1/2" // Restrict width for smaller screen usage
+          className="w-3/4 h-[300px] sm:w-1/2"
         >
           <BarChart
             data={chartData}

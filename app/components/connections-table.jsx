@@ -329,7 +329,7 @@ export function ConnectionsTable({ connectionsData, plansData }) {
       	</div>
     	</div>
 
-      {/* Edit Dialog */}
+      {/* Edit Connection Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent style={{ backgroundColor: "hsl(222.2, 84%, 4.9%)" }}>
           <DialogHeader>
@@ -440,7 +440,7 @@ export function ConnectionsTable({ connectionsData, plansData }) {
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation */}
+      {/* Delete Connection Confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent style={{ backgroundColor: "hsl(222.2, 84%, 4.9%)" }}>
           <AlertDialogHeader>
