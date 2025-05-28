@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS Connections (
     user_id INT NOT NULL,
     plan_id INT NOT NULL,
     address VARCHAR(60) NOT NULL,
-    connection_type ENUM('Коаксідальне', 'Оптоволокно', 'DSL') NOT NULL,
+    connection_type ENUM('Коаксіальне', 'Оптоволокно', 'DSL') NOT NULL,
     status ENUM('Очікується', 'Активне', 'Призупинене') DEFAULT 'Очікується' NOT NULL,
     recurring_billing BOOL DEFAULT 1 NOT NULL,
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,

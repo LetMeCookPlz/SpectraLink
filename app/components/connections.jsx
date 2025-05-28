@@ -269,7 +269,7 @@ const isFormValid = () => {
           const activationPrice = parseFloat(plan.prorated_price);
 
           return (
-            <Card key={connection.id} className="w-full max-w-sm m-10">
+            <Card key={connection.connection_id} className="w-full max-w-sm m-10">
               <CardHeader>
                 <CardTitle className="text-xl">{connection.address}</CardTitle>
               </CardHeader>

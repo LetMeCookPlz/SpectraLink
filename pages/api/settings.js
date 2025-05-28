@@ -24,16 +24,13 @@ export default async function handler(req, res) {
 	    	return res.status(409).json({ message: 'Користувач з таким email вже існує' });
 	  	} else {
 				await pool.query('UPDATE Users SET email = ? WHERE user_id = ?', [newEmail, user.id]); 
-				if (!newPassword) {
-					res.status(200).json({ message: 'Налаштування успішно збережені' });
-				}
 			}
 		}
 		if (newPassword) {
 			const hash = await bcrypt.hash(newPassword, 1);
 			await pool.query('UPDATE Users SET password = ? WHERE user_id = ?', [hash, user.id]);
-			res.status(200).json({ message: 'Settings updated successfully' });
 		}
+		return res.status(200).json({ message: 'User updated successfully' });
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			const validationError = error.errors[0];
@@ -41,7 +38,7 @@ export default async function handler(req, res) {
 				message: validationError.message
 			});
 		}
-		console.error('Error in updating user settings:', error);
+		console.error('User update error:', error);
   	res.status(500).json({ message: 'Internal server error' });
 	}
 }

@@ -44,7 +44,7 @@ export default function LoginComponent() {
         setError(result.error)
       } else {
         router.push('/plans')
-				window.location.reload()
+				router.refresh() 
       }
     } catch (error) {
       setError("Сталася помилка. Будь ласка, спробуйте ще раз.")

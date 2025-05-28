@@ -86,7 +86,7 @@ export default function Details({ plan, loggedIn }) {
                     <SelectValue placeholder="Select a connection type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Коаксідальне">Коаксідальне</SelectItem>
+                    <SelectItem value="Коаксіальне">Коаксіальне</SelectItem>
                     <SelectItem value="Оптоволокно">Оптоволокно</SelectItem>
                     <SelectItem value="DSL">DSL</SelectItem>
                   </SelectContent>

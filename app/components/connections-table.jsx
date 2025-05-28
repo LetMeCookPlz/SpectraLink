@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -47,9 +47,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 export function ConnectionsTable({ connectionsData, plansData }) {
   const [connections, setConnections] = useState(connectionsData);
-	useEffect(() => {
-    setConnections(connectionsData.sort((a, b) => (a.status === "Очікується" ? -1 : 1)));
-  }, [connectionsData]);
   const [sorting, setSorting] = useState([]);
   const [columnFilters, setColumnFilters] = useState([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -386,7 +383,7 @@ export function ConnectionsTable({ connectionsData, plansData }) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Коаксідальне">Коаксідальне</SelectItem>
+                  <SelectItem value="Коаксіальне">Коаксіальне</SelectItem>
                   <SelectItem value="Оптоволокно">Оптоволокно</SelectItem>
                   <SelectItem value="DSL">DSL</SelectItem>
                 </SelectContent>

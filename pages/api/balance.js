@@ -1,7 +1,6 @@
 import pool from '@/lib/db';
 import { getServerSession } from "next-auth";
 import { authOptions } from '@/pages/api/auth/[...nextauth].js';
-import redisClient from '@/lib/redis';
 
 export default async function handler(req, res) {
 	try {

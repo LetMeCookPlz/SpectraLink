@@ -96,10 +96,10 @@ export function TransactionsTable({ transactionsData }) {
   });
 
   const totalIncome = useMemo(() => {
-    return transactionsData
-      .filter(transaction => transaction.sum > 0)
-      .reduce((sum, transaction) => sum + transaction.sum, 0);
-  }, [transactionsData]);
+  return transactionsData
+    .filter(transaction => parseFloat(transaction.sum) > 0)
+    .reduce((sum, transaction) => sum + parseFloat(transaction.sum), 0);
+	}, [transactionsData]);
 
   return (
     <div className="flex flex-col items-center mt-24 px-4">
