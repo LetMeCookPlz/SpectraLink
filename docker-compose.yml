@@ -26,6 +26,7 @@ services:
       MYSQL_DATABASE: spectralink
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
     networks:
       - backend
 
@@ -38,3 +39,6 @@ services:
 networks:
   backend:
     driver: bridge
+
+volumes:
+  mysql_data:
