@@ -12,15 +12,80 @@ import {
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { AlertDialog, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Slider } from "@/components/ui/slider";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Connections({ connections, plans, userBalance }) {
   const [localConnections, setLocalConnections] = useState(connections);
   const [balance, setBalance] = useState(Number(userBalance));
   const [amount, setAmount] = useState(0);
   const [selectedPlanId, setSelectedPlanId] = useState(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [planDialogOpen, setPlanDialogOpen] = useState(false);
+  const [cardDialogOpen, setCardDialogOpen] = useState(false);
   const [changingConnectionId, setChangingConnectionId] = useState(null);
   const [proratedPrices, setProratedPrices] = useState({});
+	const [cardDetails, setCardDetails] = useState({
+    number: '',
+    expiry: '',
+    cvv: '',
+    name: ''
+  });
+
+	const formatCardNumber = (value) => {
+  const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+  const matches = v.match(/\d{4,16}/g);
+  const match = matches && matches[0] || '';
+  const parts = [];
+  
+  for (let i = 0, len = match.length; i < len; i += 4) {
+    parts.push(match.substring(i, i + 4));
+  }
+  
+  if (parts.length) {
+    return parts.join(' ');
+  }
+  return value;
+};
+
+const formatExpiryDate = (value) => {
+  const v = value.replace(/[^0-9]/g, '');
+  if (v.length >= 3) {
+    return `${v.substring(0, 2)}/${v.substring(2, 4)}`;
+  }
+  return value;
+};
+
+const handleCardNumberChange = (e) => {
+  const formatted = formatCardNumber(e.target.value);
+  setCardDetails({...cardDetails, number: formatted});
+};
+
+const handleExpiryChange = (e) => {
+  const formatted = formatExpiryDate(e.target.value);
+  setCardDetails({...cardDetails, expiry: formatted});
+};
+
+const handleCvvChange = (e) => {
+  const v = e.target.value.replace(/[^0-9]/g, '');
+  setCardDetails({...cardDetails, cvv: v.substring(0, 3)});
+};
+
+const isFormValid = () => {
+  return (
+    cardDetails.number.replace(/\s/g, '').length === 16 &&
+    cardDetails.expiry.length === 5 &&
+    cardDetails.cvv.length === 3 &&
+    amount > 0
+  );
+};
 
   useEffect(() => {
     const today = new Date();
@@ -35,12 +100,17 @@ export default function Connections({ connections, plans, userBalance }) {
     setProratedPrices(prices);
   }, [plans]);
 
-  const handleAddBalance = async (e) => {
+   const handleAddBalance = async (e) => {
     e.preventDefault();
-    setBalance((prevBalance) => prevBalance + amount);
-    const sum = amount;
-    setAmount(0);
+    setCardDialogOpen(true);
+  };
+
+  const handleCardSubmit = async () => {
     try {
+      setBalance((prevBalance) => prevBalance + amount);
+      const sum = amount;
+      setAmount(0);
+      setCardDialogOpen(false);
       await fetch("/api/balance", {
         method: "POST",
         headers: {
@@ -49,7 +119,7 @@ export default function Connections({ connections, plans, userBalance }) {
         body: JSON.stringify({ sum }),
       });
     } catch (error) {
-      console.error("Error:", error);
+      alert(error.message);
     }
   };
 
@@ -106,7 +176,7 @@ export default function Connections({ connections, plans, userBalance }) {
       console.error('Error changing plan:', error);
       alert('An unexpected error occurred.');
     } finally {
-      setDialogOpen(false);
+      setPlanDialogOpen(false);
     }
   };
 
@@ -217,7 +287,7 @@ export default function Connections({ connections, plans, userBalance }) {
                   onValueChange={(value) => {
                     setSelectedPlanId(parseInt(value));
                     setChangingConnectionId(connection.connection_id);
-                    setDialogOpen(true);
+                    setPlanDialogOpen(true);
                   }}
                 >
                   <SelectTrigger className="outline outline-1 outline-secondary rounded-full text-lg text-center flex items-center justify-center h-[2.5rem]">
@@ -271,7 +341,9 @@ export default function Connections({ connections, plans, userBalance }) {
           );
         })}
       </div>
-      <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
+
+      {/* Change Plan Confirmation */}
+      <AlertDialog open={planDialogOpen} onOpenChange={setPlanDialogOpen}>
         <AlertDialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }}>
           <AlertDialogHeader>
             <AlertDialogTitle>
@@ -285,7 +357,7 @@ export default function Connections({ connections, plans, userBalance }) {
             <strong>Пропорційна вартість до кінця місяця: {proratedPrices[selectedPlanId]} ₴</strong>
           </p>
           <AlertDialogFooter>
-            <Button onClick={() => setDialogOpen(false)} variant="secondary">
+            <Button onClick={() => setPlanDialogOpen(false)} variant="secondary">
               Відмінити
             </Button>
             <Button onClick={handleChangePlan}>
@@ -294,6 +366,97 @@ export default function Connections({ connections, plans, userBalance }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+			{/* Credit Card Dialog */}
+			<Dialog open={cardDialogOpen} onOpenChange={setCardDialogOpen}>
+        <DialogContent style={{ backgroundColor: 'hsl(222.2, 84%, 4.9%)' }}>
+          <DialogHeader>
+            <DialogTitle>Поповнення балансу</DialogTitle>
+            <DialogDescription>
+              Введіть дані картки для поповнення балансу на {amount.toFixed(2)} ₴
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="cardNumber" className="text-right">
+                Номер картки
+              </Label>
+              <Input
+                id="cardNumber"
+                value={cardDetails.number}
+                onChange={handleCardNumberChange}
+                placeholder="4242 4242 4242 4242"
+                className="col-span-3"
+                maxLength={19} // 16 digits + 3 spaces
+                inputMode="numeric"
+								onKeyDown={(e) => {
+  							  if (!/[0-9]|Backspace|Tab|Delete|Arrow/.test(e.key)) {
+  							    e.preventDefault();
+  							  }
+  							}}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="cardName" className="text-right">
+                Ім'я на картці
+              </Label>
+              <Input
+                id="cardName"
+                value={cardDetails.name}
+                onChange={(e) => setCardDetails({...cardDetails, name: e.target.value})}
+                placeholder="John Doe"
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="cardExpiry" className="text-right">
+                Термін дії
+              </Label>
+              <Input
+                id="cardExpiry"
+                value={cardDetails.expiry}
+                onChange={handleExpiryChange}
+                placeholder="MM/YY"
+                className="col-span-3"
+                maxLength={5} // MM/YY
+                inputMode="numeric"
+								onKeyDown={(e) => {
+  							  if (!/[0-9]|Backspace|Tab|Delete|Arrow/.test(e.key)) {
+  							    e.preventDefault();
+  							  }
+  							}}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="cardCvv" className="text-right">
+                CVV
+              </Label>
+              <Input
+                id="cardCvv"
+                value={cardDetails.cvv}
+                onChange={handleCvvChange}
+                placeholder="123"
+                className="col-span-3"
+                maxLength={3}
+                inputMode="numeric"
+								onKeyDown={(e) => {
+  							  if (!/[0-9]|Backspace|Tab|Delete|Arrow/.test(e.key)) {
+  							    e.preventDefault();
+  							  }
+  							}}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={() => setCardDialogOpen(false)} variant="secondary">
+              Скасувати
+            </Button>
+            <Button onClick={handleCardSubmit} disabled={!isFormValid()}>
+              Підтвердити оплату
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
