@@ -8,7 +8,7 @@ services:
     environment:
       - MYSQL_HOST=mysql
       - MYSQL_USER=root
-      - MYSQL_PASSWORD=sjOvqbtgfEC2atHCMAqMVZcpd5jAsnPziLRKn6NG
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
       - MYSQL_DB=spectralink
       - REDIS_HOST=redis
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
@@ -21,17 +21,40 @@ services:
   mysql:
     image: mysql:8.0
     container_name: mysql-db
+    command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
-      MYSQL_ROOT_PASSWORD: sjOvqbtgfEC2atHCMAqMVZcpd5jAsnPziLRKn6NG
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: spectralink
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  initializer:
+    container_name: db-init
+    build:
+      context: scripts/db/
+      dockerfile: db-init-job/Dockerfile
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DB=spectralink
+      - DB_ENV=local # Enables event scheduler
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - backend
 
   redis:
-    image: redis:alpine
+    image: redis:7.2-alpine
     container_name: redis-server
     networks:
       - backend
