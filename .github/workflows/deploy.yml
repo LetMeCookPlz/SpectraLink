@@ -1,0 +1,67 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy_to_gcp:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Auth to GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Authenticate Docker to Google Artifact Registry
+        run: gcloud auth configure-docker europe-north1-docker.pkg.dev --quiet
+
+      - name: Set up GCloud & Docker
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Build and Push App Image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spectralink/spectralink:app-${{ github.sha }}
+
+      - name: Build and Push DB Initializer Image
+        uses: docker/build-push-action@v5
+        with:
+          context: scripts/db
+          file: scripts/db/db-init-job/Dockerfile
+          push: true
+          tags: europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spectralink/spectralink:db-init-${{ github.sha }}
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+        env:
+          TF_BACKEND_CONFIG: "\
+            -backend-config=bucket=spectralink-tf-state \
+            -backend-config=prefix=terraform/state"
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve -lock=false
+        working-directory: ./terraform
+        env:
+          TF_VAR_app_image: "europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spectralink/spectralink:app-${{ github.sha }}"
+          TF_VAR_db_init_image: "europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/spectralink/spectralink:db-init-${{ github.sha }}"
+          TF_VAR_database_password: "${{ secrets.DB_PASSWORD }}"
+          TF_VAR_nextauth_secret: "${{ secrets.NEXTAUTH_SECRET }}"
+
+      - name: Run DB Init Job
+        run: |-
+          gcloud run jobs execute db-init-job \
+            --region europe-north1 \
+            --wait

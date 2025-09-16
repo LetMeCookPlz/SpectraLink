@@ -1,6 +1,5 @@
 services:
   nextjs:
-    image: ghcr.io/letmecookplz/spectralink:latest
     build: .
     container_name: nextjs-app
     ports:
