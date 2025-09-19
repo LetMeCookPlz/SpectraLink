@@ -25,10 +25,10 @@ resource "google_cloud_run_v2_service" "main" {
         name  = "MYSQL_DB"
         value = google_sql_database.main.name
       }
-      env {
-        name  = "REDIS_HOST"
-        value = google_redis_instance.main.host
-      }
+      # env {
+        # name  = "REDIS_HOST"
+        # value = google_redis_instance.main.host
+      # }
       env {
         name  = "NEXTAUTH_SECRET"
         value = var.nextauth_secret
@@ -52,7 +52,7 @@ resource "google_cloud_run_v2_service" "main" {
   depends_on = [
     google_sql_database.main,
     google_sql_database_instance.main,
-    google_redis_instance.main
+    # google_redis_instance.main
   ]
 }
 
