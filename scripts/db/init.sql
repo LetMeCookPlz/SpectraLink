@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS Transactions (
     FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE SET NULL
 );
 
-INSERT INTO Users (PIB, email, password, user_role) VALUES ('admin', 'admin@mail.com', '$2a$04$6aquDUeFU2rjcijeJfG/oO2NH6eHbIlUw37WAo7hG5OooN5rotZ0S', 'Admin');
+INSERT IGNORE INTO Users (PIB, email, password, user_role) VALUES ('admin', 'admin@mail.com', '$2a$04$6aquDUeFU2rjcijeJfG/oO2NH6eHbIlUw37WAo7hG5OooN5rotZ0S', 'Admin');
 
-INSERT INTO Plans (name, price, volume, bandwidth) VALUES('Standard', 400, 250, 100);
-INSERT INTO Plans (name, price, volume, bandwidth) VALUES('Premium', 800, 500, 200);
-INSERT INTO Plans (name, price, volume, bandwidth) VALUES('Budget', 200, 100, 75);
+INSERT IGNORE INTO Plans (name, price, volume, bandwidth) VALUES('Standard', 400, 250, 100);
+INSERT IGNORE INTO Plans (name, price, volume, bandwidth) VALUES('Premium', 800, 500, 200);
+INSERT IGNORE INTO Plans (name, price, volume, bandwidth) VALUES('Budget', 200, 100, 75);
